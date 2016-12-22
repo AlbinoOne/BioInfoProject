@@ -1,0 +1,18 @@
+Programin genel calismasi :
+
+>>> def ie_preprocess(document):
+...    sentences = nltk.sent_tokenize(document) [1]
+...    sentences = [nltk.word_tokenize(sent) for sent in sentences] [2]
+...    sentences = [nltk.pos_tag(sent) for sent in sentences] [3]
+
+for each abstract:
+    sentence determination [1] = nltk.sent_tokenize
+    for each sentence:
+        run tokenization [2] = nltk.word_tokenize
+ 
+        run named entity recognition == tagging nltk.ne_chunk 
+        (chunking with regular expressions)
+        run regex/dict for cancer,mirna,expressions  
+        run chunking = 
+        rule mathing 
+
