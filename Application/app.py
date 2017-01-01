@@ -10,4 +10,4 @@ except IOError:
 else:
     print "Number of articles within input file: %d\n" % len(fp)
     #print content of the last article from article list
-    print fp.get_articles().pop().get_abstract()
+    print fp.get_articles().pop()
