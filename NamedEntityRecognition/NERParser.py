@@ -82,3 +82,24 @@ def search_expressions(sentences):
         tagged_sent.append(new_sent) 
     return tagged_sent            
     
+
+def search_cancer_names(sentences):
+    """ given pos tagged sentences 
+       finds cancer names and tag them 
+       returns an array of sentences 
+    """     
+    #TODO with bigrams 
+    
+    return 
+
+
+def search_entity(sentences):
+    sentences = search_mirnas(sentences)
+    tagged_sents = search_expressions(sentences)
+    tagged_sents = search_cancer_names(tagged_sents)
+    return tagged_sents 
+   
+
+
+
+  
