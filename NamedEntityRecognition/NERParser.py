@@ -17,6 +17,10 @@ EXP_TAG_N = "EXP-N"
 EXP_TAG_ADJ = "EXP-ADJ"
 EXP_TAG_PASTV = "EXP-PASTV"
 
+CANCERFILE = "icdo3.codes.csv"
+CANCER_TAG = "CANCER-N"
+CANCER_ADJ = "CANCER-ADJ"
+
 def process_abstract(abstract):
     """ for a given abstract, process it as follows: 
     1 - get sentences 
@@ -30,74 +34,47 @@ def process_abstract(abstract):
     return sentences
 
 
-def search_mirnas(sentences):
-    """ given pos labeled sentences 
-    searches for miRNAs definitions
-    change tokens NN,JJ as MIR
-    sentences: array of sentences,
-      each element is a set of words with their tags    
-    returns sentence array with new tags
-    """    
-    # since the elements are tuple(immutable), 
-    # create new sentences array
-    tagged_sent = []
-    for sent in sentences:
-        new_sent = []  
-        for elm in sent:
-            # if miRNA 
-            tag = elm[1]
-            if re.search(mirnaPattern,elm[0]):
-                tag = MIRNA_TAG
-            elif re.search(mirnaShort,elm[0]):
-                tag = MIRNA_SHORT
-            new_sent.append((elm[0],tag))
-        tagged_sent.append(new_sent)
-    return tagged_sent 
-   
-
-def search_expressions(sentences):
-    """ given pos tagged sentences,
-    searched for the expressions 
-    exps are stored in a file 
-    sentences: array of sentence, with tags of each word
-    returns sentence array tagged with expressions 
+def search_tags(sentence):
+    """ given postagged sentence 
+       re-tag mirnas,expression and cancer names 
+       returns new tagged sentences as an array
     """
+    fp = open(CANCERFILE,"r")
     with open(ExpFile) as fxp:
         expressions = fxp.readlines()
     expressions = [e.replace('\n','') for e in expressions]
     expPattern = "|".join(expressions)
     expPattern = "("+expPattern+")"+EXPSUFFIX
-    tagged_sent = []
+
     tagDict = {"NN":EXP_TAG_N,
                "JJ":EXP_TAG_ADJ,
                "VB":EXP_TAG_V,
                "VNB":EXP_TAG_PASTV}
-    for sent in sentences:
-        new_sent = []
-        for term in sent:
-            tag = term[1]
-            if re.search(expPattern,term[0]): 
-                tag = tagDict.get(term[1])
-            new_sent.append((term[0],tag))           
-        tagged_sent.append(new_sent) 
-    return tagged_sent            
-    
-
-def search_cancer_names(sentences):
-    """ given pos tagged sentences 
-       finds cancer names and tag them 
-       returns an array of sentences 
-    """     
-    #TODO with bigrams 
-    
-    return 
-
+    new_sent = []  
+    for term in sentence:
+        # if miRNA 
+        tag = term[1]
+        if re.search(mirnaPattern,term[0]):
+            tag = MIRNA_TAG
+        elif re.search(mirnaShort,term[0]):
+            tag = MIRNA_SHORT
+        # if expression
+        if re.search(expPattern,term[0]): 
+            tag = tagDict.get(term[1])    
+        # find the cancer name 
+        # TODO: error finding cancer names 
+        #       update the list
+        if term[1] == "NN" and (term[0] in fp.read()) : 
+            tag = CANCER_TAG
+        new_sent.append((term[0],tag))
+    return new_sent  
 
 def search_entity(sentences):
-    sentences = search_mirnas(sentences)
-    tagged_sents = search_expressions(sentences)
-    tagged_sents = search_cancer_names(tagged_sents)
-    return tagged_sents 
+    tagged_sents = []
+    for sent in sentences:
+        tagged_sents.append(search_tags(sent)) 
+    return tagged_sents            
+  
    
 
 
