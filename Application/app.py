@@ -1,8 +1,5 @@
 from PubMedXMLParser.Parser import PubMedArticleParser
-
-import sys
-sys.path.insert(0,"../NamedEntityRecognition")
-from NERParser import process_abstract,search_entity
+from NamedEntityRecognition.NERParser import process_abstract, search_entity
 
 fp = PubMedArticleParser("../../Data/pubmed_result_2013.xml")
 #fp = PubMedArticleParser("../sample-pubs/pubmed_result.xml")
