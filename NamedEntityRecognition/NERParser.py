@@ -47,9 +47,12 @@ def search_tags(sentence):
     expPattern = "("+expPattern+")"+EXPSUFFIX
 
     tagDict = {"NN":EXP_TAG_N,
+               "NNS":EXP_TAG_N,
                "JJ":EXP_TAG_ADJ,
                "VB":EXP_TAG_V,
-               "VNB":EXP_TAG_PASTV}
+               "VBN":EXP_TAG_PASTV,
+               "VBD":EXP_TAG_PASTV,
+               "VBZ":EXP_TAG_V}
     new_sent = []  
     for term in sentence:
         # if miRNA 
