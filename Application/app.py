@@ -13,7 +13,7 @@ else:
     print "Number of articles within input file: %d\n" % len(fp)
     #print content of the last article from article list
     print "Content of the last article in the list:"
-    #print str(fp.get_articles().pop())+"\n"
+    print str(fp.get_articles().pop())+"\n"
 
     pnp = PubMedNERParser()
 
