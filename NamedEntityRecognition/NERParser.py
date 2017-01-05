@@ -76,3 +76,16 @@ class PubMedNERParser(object):
 
     def search_entity(self, sentences):
         return list(map(lambda sent: self.search_tags(sent), sentences))
+
+    def search_sent_patterns(self,sentence):
+        sent_pattern = []
+        for term in sentence:
+            if term[1] in [self.__MIRNA_TAG,self.__MIRNA_SHORT]:
+                sent_pattern.append(term)
+            elif term[1] in [self.__EXP_TAG_V,self.__EXP_TAG_N,\
+                             self.__EXP_TAG_ADJ,self.__EXP_TAG_PASTV]:
+                sent_pattern.append(term)
+            elif term[1] in [self.__CANCER_TAG,self.__CANCER_ADJ]:
+                sent_pattern.append(term)
+        return sent_pattern
+
