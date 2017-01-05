@@ -4,9 +4,9 @@ import re
 
 class PubMedNERParser(object):
     def __init__(self):
-        self.__MIRSTART = r"(([mM][iI])|(micro)|(let)|(hsa)|(mmu))[-]?"
-        self.__mirna_pattern = self.__MIRSTART + r"[rR]?[Nn]?[Aa]?[-]?(let)?[0-9a-z\-]*"
-        self.__mirnaShort = self.__MIRSTART + r"[rR]?[Nn]?[Aa]?[-]?[0-9,/&a-zA-Z]*"
+        self.__MIRSTART = r"(^([mM][iI][rR][Nn][Aa])|((micro)[rR][Nn][Aa])|(let)|(hsa)|(mmu))[-]?"
+        self.__mirna_pattern = self.__MIRSTART + r"[-]?(let)?[0-9a-z\-]*"
+        self.__mirnaShort = self.__MIRSTART + r"[-]?[0-9,/&a-zA-Z]*"
         self.__MIRNA_TAG = "MIR"
         self.__MIRNA_SHORT = "MIR-SHORT"
 
