@@ -19,16 +19,22 @@ class PubMedNERParser(object):
         self.__EXP_TAG_PASTV = "EXP-PASTV"
         self.__expression_pattern = self.__construct_expression_pattern()
 
-        self.__CANCERFILE = "../NamedEntityRecognition/icdo3.codes.csv"
+        self.__CANCERFILE = "../NamedEntityRecognition/cancer-list.csv"
         self.__CANCER_TAG = "CANCER-N"
         self.__CANCER_ADJ = "CANCER-ADJ"
-        fp = open(self.__CANCERFILE, "r")
-        self.__cf_content = fp.read()
+        #self.__cf_content = fp.read()
+        self.__cancer_dict = self.__construct_cancer_dict()
+        #print  self.__cancer_dict
 
     def __construct_expression_pattern(self):
         with open(self.__ExpFile) as fp:
             exps = [line.strip('\n') for line in fp.readlines()]
             return "(" + "|".join(exps) + ")" + self.__EXPSUFFIX
+        return ""
+
+    def __construct_cancer_dict(self):
+        with open(self.__CANCERFILE) as fp:
+            return [line.strip('\n') for line in fp.readlines()]
         return ""
 
     def process_abstract(self, abstract):
@@ -66,11 +72,14 @@ class PubMedNERParser(object):
             # if expression
             if re.search(self.__expression_pattern, term[0]):
                 tag = tagDict.get(term[1])
-                # find the cancer name
-            # TODO: error finding cancer names
             #       update the list
-            if term[1] == "NN" and (term[0] in self.__cf_content):
-                tag = self.__CANCER_TAG
+            if term[0] in self.__cancer_dict:
+                if term[1] == "NN":
+                    tag = self.__CANCER_TAG
+                elif term[1] == "JJ":
+                    #print "mahmut", term[0]
+                    tag = self.__CANCER_ADJ
+
             new_sent.append((term[0], tag))
         return new_sent
 
