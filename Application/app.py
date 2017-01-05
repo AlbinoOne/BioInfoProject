@@ -20,12 +20,12 @@ def print_relations(relations):
     for rel in t4_rels:
         print rel
 
-# input_file = "pubmed_result_2015.xml"
-# output_file = "../Results/"+input_file+"_res.txt"
-# fp = PubMedArticleParser("../../Data/"+input_file)
+input_file = "pubmed_result_2016.xml"
+output_file = "../Results/"+input_file+"_res.txt"
+fp = PubMedArticleParser("../../Data/"+input_file)
 
-output_file = "../Results/pubmed_result.xml_res.txt"
-fp = PubMedArticleParser("../sample-pubs/pubmed_result.xml")
+# output_file = "../Results/pubmed_result.xml_res.txt"
+# fp = PubMedArticleParser("../sample-pubs/pubmed_result.xml")
 
 try:
     fp.parse()
@@ -54,8 +54,9 @@ else:
             relation = pnp.rule_matching(pattern)
             if relation:
                 relations.append(relation)
-        res["relations"] = relations
-        results.append(res)
+        if len(relations) != 0:
+            res["relations"] = relations
+            results.append(res)
         #print_result(res)
 
     ofp = open(output_file, "w")
