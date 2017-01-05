@@ -101,13 +101,58 @@ class PubMedNERParser(object):
         # tier 1 
         # mirna check
         relation = {}
-        mCount = len(filter(lambda x: x[1] in [self.__MIRNA_TAG,self.__MIRNA_SHORT],sent_pattern))
-        
-        expCount = len(filter(lambda x: x[1] in [self.__EXP_TAG_V,self.__EXP_TAG_N,self.__EXP_TAG_ADJ,self.__EXP_TAG_PASTV],sent_pattern))
-       
-        cCount = len(filter(lambda x: x[1] in [self.__CANCER_TAG,self.__CANCER_ADJ],sent_pattern))
-          
-        if mCount!=0 and expCount!=0 and cCount!=0:
-            relation["type"] = "T1"
-        
+
+        mS = filter(lambda x: x[1] in [self.__MIRNA_TAG,self.__MIRNA_SHORT],sent_pattern)
+        mCount = len(mS)
+        if mCount != 0:
+            relation["miRNA"] = mS[0][0]
+
+        expVs = filter(lambda x: x[1] in [self.__EXP_TAG_V,self.__EXP_TAG_PASTV],sent_pattern)
+        expVCount = len(expVs)
+        expNs = filter(lambda x: x[1] in [self.__EXP_TAG_N,self.__EXP_TAG_ADJ],sent_pattern)
+        expNCount = len(expNs)
+
+        cS = filter(lambda x: x[1] in [self.__CANCER_ADJ, self.__CANCER_TAG],sent_pattern)
+        cName = ""
+        for c in cS:
+            if c[1] == self.__CANCER_ADJ:
+                cName = c[0]
+        for c in cS:
+            if cName != "":
+                cName += " "
+            if c[1] == self.__CANCER_TAG:
+                cName += c[0]
+                break
+        cCount = len(cS)
+        if cCount != 0:
+            relation["cancer"] = cName
+
+        if mCount != 0 and expNCount != 0 and cCount != 0:
+            relation["tier"] = "T2"
+
+        if mCount != 0 and expVCount != 0 and cCount != 0:
+            relation["tier"] = "T1"
+
+        up_terms = ["over express", "overexpress", "over-express", "highly express", "high express", "up regulat",
+                    "upregulat", "up-regulat", "positive regulat", "increase", "forced expression", "enhanced expression",
+                    "promote", "oncogenic"]
+        down_terms = ["under express", "underexpress", "under-express", "lower express", "lower-express", "down regula",
+                      "downregulat", "down-regulat", "negative regula", "decrease", "repress", "suppress", "inhibit",
+                      "delete"]
+        up_term_exp = "(" + "|".join(up_terms) + ")" + self.__EXPSUFFIX
+        down_term_exp = "(" + "|".join(down_terms) + ")" + self.__EXPSUFFIX
+
+        for term in sent_pattern:
+            if re.search(up_term_exp, term[0]):
+                relation["type"] = "up"
+            elif re.search(down_term_exp, term[0]):
+                relation["type"] = "down"
+
+        if mCount == 0:
+            return {}
+
+        if cCount == 0:
+            relation["tier"] = "T4"
+            return relation
+
         return relation  
