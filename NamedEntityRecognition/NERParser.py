@@ -91,8 +91,7 @@ class PubMedNERParser(object):
         for term in sentence:
             if term[1] in [self.__MIRNA_TAG,self.__MIRNA_SHORT]:
                 sent_pattern.append(term)
-            elif term[1] in [self.__EXP_TAG_V,self.__EXP_TAG_N,\
-                             self.__EXP_TAG_ADJ,self.__EXP_TAG_PASTV]:
+            elif term[1] in [self.__EXP_TAG_V,self.__EXP_TAG_N,self.__EXP_TAG_ADJ,self.__EXP_TAG_PASTV]:
                 sent_pattern.append(term)
             elif term[1] in [self.__CANCER_TAG,self.__CANCER_ADJ]:
                 sent_pattern.append(term)
@@ -102,18 +101,13 @@ class PubMedNERParser(object):
         # tier 1 
         # mirna check
         relation = {}
-        mCount = len(filter(lambda x: x[1] in \
-                     [self.__MIRNA_TAG,self.__MIRNA_SHORT],sent_pattern))
+        mCount = len(filter(lambda x: x[1] in [self.__MIRNA_TAG,self.__MIRNA_SHORT],sent_pattern))
         
-        expCount = len(filter(lambda x: x[1] in \
-                     [self.__EXP_TAG_V,self.__EXP_TAG_N,\
-                      self.__EXP_TAG_ADJ,self.__EXP_TAG_PASTV],sent_pattern))
-        
+        expCount = len(filter(lambda x: x[1] in [self.__EXP_TAG_V,self.__EXP_TAG_N,self.__EXP_TAG_ADJ,self.__EXP_TAG_PASTV],sent_pattern))
        
-        cCount = len(filter(lambda x: x[1] in \ 
-                           [self.__CANCER_TAG,self.__CANCER_ADJ],sent_pattern))
+        cCount = len(filter(lambda x: x[1] in [self.__CANCER_TAG,self.__CANCER_ADJ],sent_pattern))
           
-        if mCount!=0 and expCount!=0 and cCound!=0:
+        if mCount!=0 and expCount!=0 and cCount!=0:
             relation["type"] = "T1"
         
         return relation  

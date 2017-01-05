@@ -25,3 +25,5 @@ else:
         for sent in tagged_sentences:
             pattern = pnp.search_sent_patterns(sent)
             print pattern
+            relation = pnp.rule_matching(pattern)
+            print relation
