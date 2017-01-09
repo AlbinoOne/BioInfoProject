@@ -1,10 +1,11 @@
 from PubMedXMLParser.Parser import PubMedArticleParser
 from NamedEntityRecognition.NERParser import PubMedNERParser
 
-def print_result(result):
-    print "articleId: ", result["articleId"]
-    print "relations:"
-    print_relations(result["relations"])
+def print_results(results):
+    for result in results:
+        print "articleId: ", result["articleId"]
+        print "relations:"
+        print_relations(result["relations"])
 
 def print_relations(relations):
     t1_rels = list(filter(lambda r: "tier" in r.keys() and r["tier"] is "T1", relations))
@@ -20,12 +21,12 @@ def print_relations(relations):
     for rel in t4_rels:
         print rel
 
-input_file = "pubmed_result_2016.xml"
-output_file = "../Results/"+input_file+"_res.txt"
-fp = PubMedArticleParser("../../Data/"+input_file)
+# input_file = "pubmed_result_2014.xml"
+# output_file = "../Results/"+input_file+"_res.txt"
+# fp = PubMedArticleParser("../../Data/"+input_file)
 
-# output_file = "../Results/pubmed_result.xml_res.txt"
-# fp = PubMedArticleParser("../sample-pubs/pubmed_result.xml")
+output_file = "../Results/pubmed_result.xml_res.txt"
+fp = PubMedArticleParser("../sample-pubs/pubmed_result.xml")
 
 try:
     fp.parse()
@@ -59,6 +60,11 @@ else:
             results.append(res)
         #print_result(res)
 
-    ofp = open(output_file, "w")
-    ofp.write(str(results))
-    ofp.close()
+    write_to_file = False
+
+    if write_to_file:
+        ofp = open(output_file, "w")
+        ofp.write(str(results))
+        ofp.close()
+    else:
+        print_results(results)
